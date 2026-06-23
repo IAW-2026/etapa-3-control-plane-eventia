@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ArrowRight, Users, UserCog, CreditCard, ShoppingCart, Ticket, CalendarDays } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -75,12 +76,12 @@ function HeroSection({ createEventHref }: { createEventHref: string }) {
 /* ─── FEATURES ──────────────────────────────────────────────────────────────── */
 
 const FEATURES = [
-  { icon: Users,        iconBg: 'var(--color-primary)',     title: 'clientes',      desc: 'Gestioná tu base de clientes y su historial de compras.' },
-  { icon: UserCog,      iconBg: 'var(--color-pattern-dot)', title: 'organizadores', desc: 'Administrá los organizadores y sus permisos dentro de la plataforma.' },
-  { icon: CreditCard,   iconBg: 'var(--color-primary)',     title: 'transacciones', desc: 'Seguí cada pago realizado por los clientes.' },
-  { icon: ShoppingCart, iconBg: 'var(--color-pattern-dot)', title: 'pedidos',       desc: 'Controlá el estado de los pedidos.' },
-  { icon: Ticket,       iconBg: 'var(--color-primary)',     title: 'entradas',      desc: 'Visualizá las entradas vendidas de cada evento.' },
-  { icon: CalendarDays, iconBg: 'var(--color-pattern-dot)', title: 'eventos',       desc: 'Administrá todos los eventos publicados en la plataforma.' },
+  { icon: Users,        iconBg: 'var(--color-primary)',     title: 'clientes',      desc: 'Gestioná tu base de clientes y su historial de compras.',              href: '/clientes' },
+  { icon: UserCog,      iconBg: 'var(--color-pattern-dot)', title: 'organizadores', desc: 'Administrá los organizadores y sus permisos dentro de la plataforma.', href: '/organizadores' },
+  { icon: CreditCard,   iconBg: 'var(--color-primary)',     title: 'transacciones', desc: 'Seguí cada pago realizado por los clientes.',                          href: '/transacciones' },
+  { icon: ShoppingCart, iconBg: 'var(--color-pattern-dot)', title: 'pedidos',       desc: 'Controlá el estado de los pedidos.',                                   href: '/pedidos' },
+  { icon: Ticket,       iconBg: 'var(--color-primary)',     title: 'entradas',      desc: 'Visualizá las entradas vendidas de cada evento.',                       href: '/entradas' },
+  { icon: CalendarDays, iconBg: 'var(--color-pattern-dot)', title: 'eventos',       desc: 'Administrá todos los eventos publicados en la plataforma.',             href: '/eventos' },
 ];
 
 function FeaturesSection() {
@@ -121,7 +122,7 @@ function FeaturesSection() {
 
       {/* Grid de 6 cards */}
       <div className="relative grid grid-cols-1 gap-[16px] sm:grid-cols-2 lg:grid-cols-3">
-        {FEATURES.map(({ icon: Icon, iconBg, title, desc }) => (
+        {FEATURES.map(({ icon: Icon, iconBg, title, desc, href }) => (
           <div
             key={title}
             className="flex flex-col justify-between rounded-[24px] border p-5 sm:p-[30px] transition hover:-translate-y-1"
@@ -146,12 +147,13 @@ function FeaturesSection() {
               </p>
             </div>
             <div className="mt-[18px] flex justify-end">
-              <div
-                className="flex h-8 w-8 items-center justify-center rounded-full"
+              <Link
+                href={href}
+                className="flex h-8 w-8 items-center justify-center rounded-full transition hover:opacity-80"
                 style={{ background: 'var(--color-primary)' }}
               >
                 <ArrowRight size={15} className="text-white" />
-              </div>
+              </Link>
             </div>
           </div>
         ))}
