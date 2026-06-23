@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import { AlertCircle } from 'lucide-react';
 import { ptSerif } from '@/app/_componentes/fonts';
+import BotonVolver from '@/app/_componentes/botones/BotonVolver';
 
 export const metadata: Metadata = {
-  title: 'Clientes - Eventia',
+  title: 'Eventia - Clientes',
   description: 'Todos los clientes registrados en la plataforma.',
 };
 
@@ -38,17 +39,12 @@ export default async function ClientesPage() {
   }
 
   return (
-    <div className="px-8 py-10 sm:px-14">
+    <div className="min-h-screen px-8 py-10 sm:px-14" style={{ background: '#fcf4e5' }}>
+      <BotonVolver />
       <div className="mb-8">
-        <span
-          className="font-label mb-3 inline-flex items-center rounded-full px-[14px] py-[7px] text-[11px] font-extrabold uppercase tracking-[0.14em]"
-          style={{ background: 'var(--color-accent)', color: 'var(--color-accent-foreground)' }}
-        >
-          Control Plane
-        </span>
         <h1
           className="font-display mt-1 leading-[1] tracking-[-0.01em]"
-          style={{ fontSize: 'clamp(28px,3.5vw,44px)', color: 'var(--color-ink)' }}
+          style={{ fontSize: 'clamp(28px,3.5vw,44px)', color: '#650003' }}
         >
           Clientes registrados
         </h1>
@@ -69,7 +65,7 @@ export default async function ClientesPage() {
         </div>
       ) : (
         <div
-          className="overflow-x-auto rounded-[16px] border"
+          className="overflow-x-auto rounded-[16px] border bg-white"
           style={{ borderColor: '#eadfd2' }}
         >
           <ClientesTable clientes={clientes} />

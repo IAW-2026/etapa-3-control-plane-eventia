@@ -76,12 +76,12 @@ function HeroSection({ createEventHref }: { createEventHref: string }) {
 /* ─── FEATURES ──────────────────────────────────────────────────────────────── */
 
 const FEATURES = [
-  { icon: Users,        iconBg: 'var(--color-primary)',     title: 'clientes',      desc: 'Gestioná tu base de clientes y su historial de compras.',              href: '/clientes' },
-  { icon: UserCog,      iconBg: 'var(--color-pattern-dot)', title: 'organizadores', desc: 'Administrá los organizadores y sus permisos dentro de la plataforma.', href: '/organizadores' },
-  { icon: CreditCard,   iconBg: 'var(--color-primary)',     title: 'transacciones', desc: 'Seguí cada pago realizado por los clientes.',                          href: '/transacciones' },
-  { icon: ShoppingCart, iconBg: 'var(--color-pattern-dot)', title: 'pedidos',       desc: 'Controlá el estado de los pedidos.',                                   href: '/pedidos' },
-  { icon: Ticket,       iconBg: 'var(--color-primary)',     title: 'entradas',      desc: 'Visualizá las entradas vendidas de cada evento.',                       href: '/entradas' },
-  { icon: CalendarDays, iconBg: 'var(--color-pattern-dot)', title: 'eventos',       desc: 'Administrá todos los eventos publicados en la plataforma.',             href: '/eventos' },
+  { icon: Users,        iconBg: 'var(--color-primary)',     title: 'Clientes',      desc: 'Gestioná tu base de clientes y su historial de compras.',              href: '/clientes' },
+  { icon: UserCog,      iconBg: 'var(--color-pattern-dot)', title: 'Organizadores', desc: 'Administrá los organizadores y sus permisos dentro de la plataforma.', href: '/organizadores' },
+  { icon: CreditCard,   iconBg: 'var(--color-primary)',     title: 'Transacciones', desc: 'Seguí cada pago realizado por los clientes.',                          href: '/transacciones' },
+  { icon: ShoppingCart, iconBg: 'var(--color-pattern-dot)', title: 'Pedidos',       desc: 'Controlá el estado de los pedidos.',                                   href: '/pedidos' },
+  { icon: Ticket,       iconBg: 'var(--color-primary)',     title: 'Entradas',      desc: 'Visualizá las entradas vendidas de cada evento.',                       href: '/entradas' },
+  { icon: CalendarDays, iconBg: 'var(--color-pattern-dot)', title: 'Eventos',       desc: 'Administrá todos los eventos publicados en la plataforma.',             href: '/eventos' },
 ];
 
 function FeaturesSection() {

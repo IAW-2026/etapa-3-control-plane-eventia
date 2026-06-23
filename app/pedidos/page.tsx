@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
 import { AlertCircle } from 'lucide-react';
 import DevolverButton from '@/app/_componentes/botones/DevolverButton';
+import BotonVolver from '@/app/_componentes/botones/BotonVolver';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Pedidos - Eventia',
+  title: 'Eventia - Pedidos',
   description: 'Todos los pedidos registrados en la plataforma.',
 };
 
@@ -63,17 +66,12 @@ export default async function PedidosPage() {
   }
 
   return (
-    <div className="px-8 py-10 sm:px-14">
+    <div className="min-h-screen px-8 py-10 sm:px-14" style={{ background: '#fcf4e5' }}>
+      <BotonVolver />
       <div className="mb-8">
-        <span
-          className="font-label mb-3 inline-flex items-center rounded-full px-[14px] py-[7px] text-[11px] font-extrabold uppercase tracking-[0.14em]"
-          style={{ background: 'var(--color-accent)', color: 'var(--color-accent-foreground)' }}
-        >
-          Control Plane
-        </span>
         <h1
           className="font-display mt-1 leading-[1] tracking-[-0.01em]"
-          style={{ fontSize: 'clamp(28px,3.5vw,44px)', color: 'var(--color-ink)' }}
+          style={{ fontSize: 'clamp(28px,3.5vw,44px)', color: '#650003' }}
         >
           Pedidos
         </h1>
@@ -94,7 +92,7 @@ export default async function PedidosPage() {
         </div>
       ) : (
         <div
-          className="overflow-x-auto rounded-[16px] border"
+          className="overflow-x-auto rounded-[16px] border bg-white"
           style={{ borderColor: '#eadfd2' }}
         >
           <PedidosTable pedidos={pedidos} orgMap={orgMap} />
@@ -165,7 +163,7 @@ function PedidosTable({
                 {p.cantEntradas}
               </td>
               <td className={`${CELL} text-center text-[11px] font-semibold text-[#2c2a28]`}>
-                ${p.monto.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                {p.monto != null ? `$${p.monto.toLocaleString('es-AR', { minimumFractionDigits: 2 })}` : '—'}
               </td>
               <td className={`${CELL} text-center text-[11px] text-[#6f5a50]`}>
                 {p.estado}

@@ -1,8 +1,8 @@
-import Link from 'next/link';
-
-const links = [
-  { label: 'Inicio', href: '/' },
-  { label: 'Mis Eventos', href: '/organizador/eventos' },
+const apps = [
+  { label: 'App Seller',   href: 'https://proyecto-c-seller-eventia.vercel.app/' },
+  { label: 'App Buyer',    href: 'https://proyecto-c-buyer-eventia.vercel.app/' },
+  { label: 'App Shipping', href: 'https://proyecto-c-shipping-eventia.vercel.app/' },
+  { label: 'App Payments', href: 'https://proyecto-c-payments-eventia.vercel.app/' },
 ];
 
 export default function Footer() {
@@ -28,18 +28,20 @@ export default function Footer() {
 
         <div>
           <h2 className="font-label mb-4 text-[11px] font-extrabold uppercase tracking-[0.14em]" style={{ color: 'var(--color-footer-accent)' }}>
-            Plataforma
+            Plataformas
           </h2>
           <div className="flex flex-col">
-            {links.map(({ label, href }) => (
-              <Link
+            {apps.map(({ label, href }) => (
+              <a
                 key={label}
                 href={href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="font-body py-[6px] text-[14.5px] no-underline transition hover:translate-x-0.5"
                 style={{ color: 'var(--color-footer-link)' }}
               >
                 {label}
-              </Link>
+              </a>
             ))}
           </div>
         </div>

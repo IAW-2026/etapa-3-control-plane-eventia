@@ -1,9 +1,8 @@
-﻿import type { Metadata } from "next";
-import "./globals.css";
+﻿import "./globals.css";
 import { ClerkProvider} from '@clerk/nextjs'
-import { esAdmin } from "./lib/rolAdmin";
 import Footer from "./_componentes/Footer";
 import BarraInicio from "./_componentes/BarraInicio";
+import SidebarAdmin from "./_componentes/SidebarAdmin";
 import { ffDisplay, ffBody, ffLabel } from './_componentes/fonts';
 
 export const metadata = {
@@ -27,7 +26,10 @@ export default async function RootLayout({
       <ClerkProvider>
         <body className="min-h-full bg-white text-slate-900 flex flex-col">
           <BarraInicio />
-          <main className="flex-1 min-w-0">{children}</main>
+          <div className="flex flex-1 min-w-0">
+            <SidebarAdmin />
+            <main className="flex-1 min-w-0">{children}</main>
+          </div>
           <Footer />
         </body>
       </ClerkProvider>
