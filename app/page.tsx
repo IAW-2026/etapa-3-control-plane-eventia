@@ -67,6 +67,7 @@ function HeroSection({ createEventHref }: { createEventHref: string }) {
           fill
           style={{ objectFit: 'cover' }}
           priority
+          unoptimized
         />
       </div>
     </section>

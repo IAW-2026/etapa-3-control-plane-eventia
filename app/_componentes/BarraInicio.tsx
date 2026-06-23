@@ -42,7 +42,7 @@ export default function BarraInicio() {
           </button>
 
           <Link href="/" className="flex items-center gap-3 no-underline">
-            <Image src="/logo.png" alt="Eventia logo" width={34} height={34} className="rounded-full" />
+            <Image src="/logo.png" alt="Eventia logo" width={34} height={34} className="rounded-full" unoptimized />
             <span className="font-display text-[22px] tracking-[0.01em]" style={{ color: 'var(--color-primary)' }}>
               Eventia
             </span>
