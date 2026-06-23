@@ -83,18 +83,16 @@ export default async function TransaccionesPage() {
 const CELL = 'border-r border-[#eadfd2] px-3 py-3 last:border-r-0';
 
 function TransaccionesTable({ transacciones }: { transacciones: Transaccion[] }) {
-  const cols = [ 'id_transaccion', 'id_pedido', 'monto', 'moneda', 'estado_transaccion'];
+  const cols = [ 'id_transaccion', 'id_pedido', 'monto', 'estado_transaccion', 'moneda'];
 
   return (
     <table className="min-w-[820px] w-full table-fixed bg-transparent text-[11px]">
       <colgroup>
-        <col className="w-[18%]" />
-        <col className="w-[16%]" />
-        <col className="w-[13%]" />
-        <col className="w-[17%]" />
-        <col className="w-[11%]" />
-        <col className="w-[11%]" />
-        <col className="w-[14%]" />
+        <col className="w-[20%]" />
+        <col className="w-[20%]" />
+        <col className="w-[20%]" />
+        <col className="w-[20%]" />
+        <col className="w-[20%]" />
       </colgroup>
       <thead>
         <tr
