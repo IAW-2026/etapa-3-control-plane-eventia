@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Link } from 'lucide-react';
 import DevolverButton from '@/app/_componentes/botones/DevolverButton';
 import BotonVolver from '@/app/_componentes/botones/BotonVolver';
-
+import { esAdmin } from '@/app/lib/rolAdmin';
+import { ShieldAlert } from "lucide-react";
+import { currentUser } from "@clerk/nextjs/server";
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
@@ -52,6 +54,40 @@ async function fetchNombresOrganizadores(): Promise<Map<string, string>> {
 
 
 export default async function PedidosPage() {
+
+  const user = await currentUser();
+  const publicMetadata = user?.publicMetadata;
+  const admin = publicMetadata ? esAdmin(publicMetadata) : false;
+
+  if (!admin) {
+    return (
+      <div className="eventia-page flex flex-col items-center justify-center p-6 text-center">
+        <div className="eventia-card max-w-md flex flex-col items-center p-8 bg-[var(--color-surface-soft)]">
+          
+          <div className="bg-[var(--color-primary)] text-[var(--color-primary-foreground)] w-16 h-16 rounded-2xl flex items-center justify-center mb-5 shadow-md">
+            <ShieldAlert className="w-9 h-9 stroke-[2]" />
+          </div>
+
+          <h1 className="font-display text-3xl text-[var(--color-primary)] mb-3 uppercase tracking-tight">
+            Acceso Restringido
+          </h1>
+
+          <p className="font-body text-sm text-[var(--color-text-muted)] max-w-sm mb-6 leading-relaxed">
+            Este módulo está reservado exclusivamente para el personal de administración central de Eventia.
+          </p> 
+
+          <Link
+            href="/"
+            className="eventia-button eventia-button--accent w-full text-center"
+          >
+            Volver al Inicio
+          </Link>
+        </div>
+      </div>
+    );
+  }  
+
+
   let pedidos: Pedido[] = [];
   let error: string | null = null;
   let orgMap = new Map<string, string>();
