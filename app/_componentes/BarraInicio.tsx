@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { LayoutDashboard, Menu, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { NAV_ITEMS } from '@/app/_componentes/navItems';
 
 function HomeIcon() {
   return (
@@ -82,13 +83,13 @@ export default function BarraInicio() {
             onClick={() => setMobileMenuOpen(false)}
             className="absolute inset-0 bg-black/40"
           />
-          <div className="absolute left-0 top-0 h-full w-72 bg-white shadow-2xl">
+          <div className="absolute left-0 top-0 h-full w-72 bg-[#fcf4e5] shadow-2xl">
             <div className="flex h-16 items-center justify-between border-b px-4" style={{ borderColor: 'var(--color-border)' }}>
-              <span className="font-label text-[12px] font-bold uppercase tracking-[0.14em] text-slate-400">Menú</span>
+              <span className="font-label text-[12px] font-bold uppercase tracking-[0.14em] text-[#8b1010]">Control Plane</span>
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
-                className="rounded-xl p-2 transition hover:bg-[#faf0ee]"
+                className="rounded-xl p-2 transition hover:bg-[#f5e8e4]"
                 aria-label="Cerrar menú"
                 style={{ color: 'var(--color-primary)' }}
               >
@@ -96,24 +97,23 @@ export default function BarraInicio() {
               </button>
             </div>
             <nav className="flex flex-col gap-1 py-4" onClick={() => setMobileMenuOpen(false)}>
-              <Link
-                href="/"
-                className="mx-2 flex items-center gap-2.5 border-l-[3px] px-4 py-2 text-[13px] font-medium transition-colors no-underline"
-                style={pathname === '/'
-                  ? { borderColor: 'var(--color-primary)', background: '#f5e8e4', color: 'var(--color-primary)' }
-                  : { borderColor: 'transparent', color: '#5a3a35' }}
-              >
-                <HomeIcon /> Inicio
-              </Link>
-              {isSignedIn && (
-                <Link
-                  href="/organizadores"
-                  className="mx-2 flex items-center gap-2.5 border-l-[3px] px-4 py-2 text-[13px] font-medium transition-colors no-underline"
-                  style={{ borderColor: 'transparent', color: '#5a3a35' }}
-                >
-                  <LayoutDashboard size={17} /> Panel
-                </Link>
-              )}
+              {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+                const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    className={`mx-2 flex items-center gap-2.5 rounded-r-lg border-l-[3px] px-4 py-2 text-[13px] font-medium transition-colors no-underline ${
+                      active
+                        ? 'border-[var(--color-primary)] bg-[#f5e8e4] text-[var(--color-primary)]'
+                        : 'border-transparent text-[#5a3a35] hover:bg-[#f5ede8]'
+                    }`}
+                  >
+                    <Icon className="h-4 w-4 shrink-0" />
+                    {label}
+                  </Link>
+                );
+              })}
             </nav>
           </div>
         </div>

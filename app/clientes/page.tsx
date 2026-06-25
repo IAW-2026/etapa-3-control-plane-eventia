@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { AlertCircle, Link } from 'lucide-react';
+import Link from 'next/link';
+import { AlertCircle } from 'lucide-react';
 import { ptSerif } from '@/app/_componentes/fonts';
 import BotonVolver from '@/app/_componentes/botones/BotonVolver';
 import { esAdmin } from '@/app/lib/rolAdmin';

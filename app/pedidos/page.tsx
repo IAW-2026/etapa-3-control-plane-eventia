@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
-import { AlertCircle, Link } from 'lucide-react';
+import { Suspense } from 'react';
+import Link from 'next/link';
+import { AlertCircle } from 'lucide-react';
 import DevolverButton from '@/app/_componentes/botones/DevolverButton';
+import Paginacion from '@/app/_componentes/Paginacion';
+import PillEstado from '@/app/_componentes/PillEstado';
 import BotonVolver from '@/app/_componentes/botones/BotonVolver';
 import { esAdmin } from '@/app/lib/rolAdmin';
 import { ShieldAlert } from "lucide-react";
@@ -32,7 +36,8 @@ async function fetchPedidos(): Promise<Pedido[]> {
   });
   if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
   const data = await res.json();
-  return Array.isArray(data) ? data : (data.pedidos ?? data.data ?? data.results ?? []);
+  const lista = Array.isArray(data) ? data : (data.pedidos ?? data.data ?? data.results ?? []);
+  return lista.sort((a: Pedido, b: Pedido) => a.idPedido - b.idPedido);
 }
 
 async function fetchNombresOrganizadores(): Promise<Map<string, string>> {
@@ -53,8 +58,14 @@ async function fetchNombresOrganizadores(): Promise<Map<string, string>> {
 }
 
 
-export default async function PedidosPage() {
+const ITEMS_POR_PAGINA = 10;
 
+export default async function PedidosPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page } = await searchParams;
   const user = await currentUser();
   const publicMetadata = user?.publicMetadata;
   const admin = publicMetadata ? esAdmin(publicMetadata) : false;
@@ -101,6 +112,10 @@ export default async function PedidosPage() {
     error = e instanceof Error ? e.message : 'Error al cargar los pedidos';
   }
 
+  const pagina = Math.max(1, Number(page) || 1);
+  const totalPaginas = Math.ceil(pedidos.length / ITEMS_POR_PAGINA);
+  const pedidosPaginados = pedidos.slice((pagina - 1) * ITEMS_POR_PAGINA, pagina * ITEMS_POR_PAGINA);
+
   return (
     <div className="min-h-screen px-8 py-10 sm:px-14" style={{ background: '#fcf4e5' }}>
       <BotonVolver />
@@ -128,10 +143,15 @@ export default async function PedidosPage() {
         </div>
       ) : (
         <div
-          className="overflow-x-auto rounded-[16px] border bg-white"
+          className="rounded-[16px] border bg-white"
           style={{ borderColor: '#eadfd2' }}
         >
-          <PedidosTable pedidos={pedidos} orgMap={orgMap} />
+          <div className="overflow-x-auto">
+            <PedidosTable pedidos={pedidosPaginados} orgMap={orgMap} />
+          </div>
+          <Suspense fallback={null}>
+            <Paginacion totalPaginas={totalPaginas} />
+          </Suspense>
         </div>
       )}
     </div>
@@ -201,8 +221,8 @@ function PedidosTable({
               <td className={`${CELL} text-center text-[11px] font-semibold text-[#2c2a28]`}>
                 {p.monto != null ? `$${p.monto.toLocaleString('es-AR', { minimumFractionDigits: 2 })}` : '—'}
               </td>
-              <td className={`${CELL} text-center text-[11px] text-[#6f5a50]`}>
-                {p.estado}
+              <td className={`${CELL} text-center`}>
+                <PillEstado estado={p.estado} />
               </td>
               <td className={`${CELL} text-center`}>
                 <DevolverButton idPedido={p.idPedido} disabled={p.estado === 'CANCELADO'} />

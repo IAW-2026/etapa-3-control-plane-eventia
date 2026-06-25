@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
-import { AlertCircle, Link } from 'lucide-react';
+import { Suspense } from 'react';
+import Link from 'next/link';
+import { AlertCircle } from 'lucide-react';
 import { ptSerif } from '@/app/_componentes/fonts';
 import DesactivarOrganizadorButton from '@/app/_componentes/botones/DesactivarOrganizadorButton';
+import Paginacion from '@/app/_componentes/Paginacion';
+import ActivarOrganizadorButton from '@/app/_componentes/botones/ActivarOrganizadorButton';
 import BotonVolver from '@/app/_componentes/botones/BotonVolver';
 import { esAdmin } from '@/app/lib/rolAdmin';
 import { ShieldAlert } from "lucide-react";
@@ -33,8 +37,14 @@ async function fetchOrganizadores(): Promise<Organizador[]> {
   return Array.isArray(data) ? data : (data.eventos ?? data.data ?? data.results ?? []);
 }
 
-export default async function OrganizadoresPage() {
+const ITEMS_POR_PAGINA = 10;
 
+export default async function OrganizadoresPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page } = await searchParams;
   const user = await currentUser();
   const publicMetadata = user?.publicMetadata;
   const admin = publicMetadata ? esAdmin(publicMetadata) : false;
@@ -77,6 +87,10 @@ export default async function OrganizadoresPage() {
     error = e instanceof Error ? e.message : 'Error al cargar los organizadores';
   }
 
+  const pagina = Math.max(1, Number(page) || 1);
+  const totalPaginas = Math.ceil(organizadores.length / ITEMS_POR_PAGINA);
+  const organizadoresPaginados = organizadores.slice((pagina - 1) * ITEMS_POR_PAGINA, pagina * ITEMS_POR_PAGINA);
+
   return (
     <div className="min-h-screen px-8 py-10 sm:px-14" style={{ background: '#fcf4e5' }}>
       <BotonVolver />
@@ -104,10 +118,15 @@ export default async function OrganizadoresPage() {
         </div>
       ) : (
         <div
-          className="overflow-x-auto rounded-[16px] border bg-white"
+          className="rounded-[16px] border bg-white"
           style={{ borderColor: '#eadfd2' }}
         >
-          <OrganizadoresTable organizadores={organizadores} />
+          <div className="overflow-x-auto">
+            <OrganizadoresTable organizadores={organizadoresPaginados} />
+          </div>
+          <Suspense fallback={null}>
+            <Paginacion totalPaginas={totalPaginas} />
+          </Suspense>
         </div>
       )}
     </div>
@@ -165,7 +184,10 @@ function OrganizadoresTable({ organizadores }: { organizadores: Organizador[] })
                   {activo ? 'Activo' : 'Inactivo'}
                 </td>
                 <td className={`${CELL} text-center`}>
-                  <DesactivarOrganizadorButton idOrganizador={org.idOrganizador} disabled={!activo} />
+                  <div className="flex items-center justify-center gap-1.5">
+                    <ActivarOrganizadorButton idOrganizador={org.idOrganizador} disabled={activo} />
+                    <DesactivarOrganizadorButton idOrganizador={org.idOrganizador} disabled={!activo} />
+                  </div>
                 </td>
               </tr>
             );

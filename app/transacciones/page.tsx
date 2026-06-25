@@ -1,5 +1,9 @@
 import type { Metadata } from 'next';
-import { AlertCircle, Link } from 'lucide-react';
+import { Suspense } from 'react';
+import Link from 'next/link';
+import { AlertCircle } from 'lucide-react';
+import PillEstado from '@/app/_componentes/PillEstado';
+import Paginacion from '@/app/_componentes/Paginacion';
 import { ptSerif } from '@/app/_componentes/fonts';
 import BotonVolver from '@/app/_componentes/botones/BotonVolver';
 import { esAdmin } from '@/app/lib/rolAdmin';
@@ -32,8 +36,14 @@ async function fetchTransacciones(): Promise<Transaccion[]> {
   return Array.isArray(data) ? data : (data.transacciones ?? data.data ?? data.results ?? []);
 }
 
-export default async function TransaccionesPage() {
+const ITEMS_POR_PAGINA = 10;
 
+export default async function TransaccionesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page } = await searchParams;
   const user = await currentUser();
   const publicMetadata = user?.publicMetadata;
   const admin = publicMetadata ? esAdmin(publicMetadata) : false;
@@ -76,6 +86,10 @@ export default async function TransaccionesPage() {
     error = e instanceof Error ? e.message : 'Error al cargar las transacciones';
   }
 
+  const pagina = Math.max(1, Number(page) || 1);
+  const totalPaginas = Math.ceil(transacciones.length / ITEMS_POR_PAGINA);
+  const transaccionesPaginadas = transacciones.slice((pagina - 1) * ITEMS_POR_PAGINA, pagina * ITEMS_POR_PAGINA);
+
   return (
     <div className="min-h-screen px-8 py-10 sm:px-14" style={{ background: '#fcf4e5' }}>
       <BotonVolver />
@@ -103,10 +117,15 @@ export default async function TransaccionesPage() {
         </div>
       ) : (
         <div
-          className="overflow-x-auto rounded-[16px] border bg-white"
+          className="rounded-[16px] border bg-white"
           style={{ borderColor: '#eadfd2' }}
         >
-          <TransaccionesTable transacciones={transacciones} />
+          <div className="overflow-x-auto">
+            <TransaccionesTable transacciones={transaccionesPaginadas} />
+          </div>
+          <Suspense fallback={null}>
+            <Paginacion totalPaginas={totalPaginas} />
+          </Suspense>
         </div>
       )}
     </div>
@@ -160,9 +179,7 @@ function TransaccionesTable({ transacciones }: { transacciones: Transaccion[] })
                     {trans.monto ?? '—'}
                 </td>
                 <td className={`${CELL} text-center`}>
-                  <span className="inline-flex rounded-full bg-[var(--color-accent)] px-2 py-1 text-[10px] font-semibold leading-tight text-[var(--color-accent-foreground)] whitespace-normal">
-                    {trans.estado_transaccion ?? '—'}
-                  </span>
+                  <PillEstado estado={trans.estado_transaccion} />
                 </td>
                 <td className={`${CELL} text-center text-[11px] text-[#6f5a50]`}>
                   {trans.moneda ?? '—'}

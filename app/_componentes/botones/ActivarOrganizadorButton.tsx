@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { desactivarOrganizador } from '@/app/organizadores/actions';
+import { activarOrganizador } from '@/app/organizadores/actions';
 import ModalExito from '@/app/_componentes/ModalExito';
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
   disabled?: boolean;
 };
 
-export default function DesactivarOrganizadorButton({ idOrganizador, disabled = false }: Props) {
+export default function ActivarOrganizadorButton({ idOrganizador, disabled = false }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [exito, setExito] = useState(false);
@@ -18,10 +18,10 @@ export default function DesactivarOrganizadorButton({ idOrganizador, disabled = 
 
   const handleClick = async () => {
     setLoading(true);
-    const result = await desactivarOrganizador(idOrganizador);
+    const result = await activarOrganizador(idOrganizador);
     setLoading(false);
     if (!result.ok) {
-      setErrorMsg(result.error ?? 'Error al desactivar');
+      setErrorMsg(result.error ?? 'Error al activar');
     } else {
       setExito(true);
     }
@@ -38,16 +38,16 @@ export default function DesactivarOrganizadorButton({ idOrganizador, disabled = 
         className={`inline-flex h-5 items-center gap-1 rounded-full px-2 text-[9px] font-bold transition ${
           isDisabled
             ? 'cursor-not-allowed bg-[#e0d8d0] text-[#a89e96]'
-            : 'bg-[var(--color-accent)] text-[var(--color-accent-foreground)] hover:brightness-95'
+            : 'bg-[#c8ddc8] text-[#2d5a2d] hover:brightness-95'
         }`}
       >
-        {loading ? '...' : 'Desactivar'}
+        {loading ? '...' : 'Activar'}
       </button>
 
       {exito && (
         <ModalExito
-          title="Organizador desactivado"
-          message="El organizador fue desactivado con exito."
+          title="Organizador activado"
+          message="El organizador fue activado con exito."
           onClose={() => { setExito(false); router.refresh(); }}
         />
       )}
@@ -55,7 +55,7 @@ export default function DesactivarOrganizadorButton({ idOrganizador, disabled = 
       {errorMsg && (
         <ModalExito
           variant="error"
-          title="No se pudo desactivar"
+          title="No se pudo activar"
           message={errorMsg}
           onClose={() => setErrorMsg(null)}
         />
