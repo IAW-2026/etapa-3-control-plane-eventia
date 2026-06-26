@@ -6,6 +6,8 @@ import BotonVolver from '@/app/_componentes/botones/BotonVolver';
 import { esAdmin } from '@/app/lib/rolAdmin';
 import { ShieldAlert } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
+import Paginacion from '@/app/_componentes/Paginacion';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Eventia - Entradas',
@@ -35,8 +37,14 @@ async function fetchEntradas(): Promise<Entradas[]> {
   return Array.isArray(data) ? data : (data.eventos ?? data.data ?? data.results ?? []);
 }
 
-export default async function EntradasPage() {
+const ITEMS_POR_PAGINA = 10;
 
+export default async function EntradasPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page } = await searchParams;
   const user = await currentUser();
   const publicMetadata = user?.publicMetadata;
   const admin = publicMetadata ? esAdmin(publicMetadata) : false;
@@ -78,6 +86,10 @@ export default async function EntradasPage() {
   } catch (e) {
     error = e instanceof Error ? e.message : 'Error al cargar las entradas';
   }
+   
+  const pagina = Math.max(1, Number(page) || 1);
+  const totalPaginas = Math.ceil(entradas.length / ITEMS_POR_PAGINA);
+  const entradasPaginadas = entradas.slice((pagina - 1) * ITEMS_POR_PAGINA, pagina * ITEMS_POR_PAGINA);
 
   return (
     <div className="min-h-screen px-8 py-10 sm:px-14" style={{ background: '#fcf4e5' }}>
@@ -109,7 +121,10 @@ export default async function EntradasPage() {
           className="overflow-x-auto rounded-[16px] border bg-white"
           style={{ borderColor: '#eadfd2' }}
         >
-          <EntradasTable entradas={entradas} />
+          <EntradasTable entradas={entradasPaginadas} />
+            <Suspense fallback={null}>
+              <Paginacion totalPaginas={totalPaginas} />
+            </Suspense>
         </div>
       )}
     </div>

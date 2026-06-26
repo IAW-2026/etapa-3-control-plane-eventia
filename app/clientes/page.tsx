@@ -6,6 +6,8 @@ import BotonVolver from '@/app/_componentes/botones/BotonVolver';
 import { esAdmin } from '@/app/lib/rolAdmin';
 import { ShieldAlert } from "lucide-react"; 
 import { currentUser } from "@clerk/nextjs/server";
+import Paginacion from '@/app/_componentes/Paginacion';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Eventia - Clientes',
@@ -32,8 +34,15 @@ async function fetchClientes(): Promise<Cliente[]> {
   return Array.isArray(data) ? data : (data.clientes ?? data.data ?? data.results ?? []);
 }
 
-export default async function ClientesPage() {
+const ITEMS_POR_PAGINA = 10;
 
+export default async function ClientesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+
+  const { page } = await searchParams;
   const user = await currentUser();
   const publicMetadata = user?.publicMetadata;
   const admin = publicMetadata ? esAdmin(publicMetadata) : false;
@@ -74,7 +83,9 @@ export default async function ClientesPage() {
   } catch (e) {
     error = e instanceof Error ? e.message : 'Error al cargar los clientes';
   }
-
+  const pagina = Math.max(1, Number(page) || 1);
+  const totalPaginas = Math.ceil(clientes.length / ITEMS_POR_PAGINA);
+  const clientesPaginados = clientes.slice((pagina - 1) * ITEMS_POR_PAGINA, pagina * ITEMS_POR_PAGINA);
   return (
     <div className="min-h-screen px-8 py-10 sm:px-14" style={{ background: '#fcf4e5' }}>
       <BotonVolver />
@@ -105,7 +116,12 @@ export default async function ClientesPage() {
           className="overflow-x-auto rounded-[16px] border bg-white"
           style={{ borderColor: '#eadfd2' }}
         >
-          <ClientesTable clientes={clientes} />
+          <ClientesTable clientes={clientesPaginados} />
+
+          <Suspense fallback={null}>
+             <Paginacion totalPaginas={totalPaginas} />
+          </Suspense>
+                    
         </div>
       )}
     </div>
